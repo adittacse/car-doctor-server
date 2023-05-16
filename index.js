@@ -28,14 +28,14 @@ async function run() {
     const serviceCollection = client.db("cardoctor").collection("services");
     const bookingCollection = client.db("cardoctor").collection("bookings");
 
-    // step-1: get all data from mongodb
+    // step-1: get all services data from mongodb
     app.get("/services", async (req, res) => {
         const cursor = serviceCollection.find();
         const result = await cursor.toArray();
         res.send(result);
     });
 
-    // step-2: get specific id's information
+    // step-2: get specific id's information of service
     app.get("/services/:id", async (req, res) => {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)};
@@ -45,15 +45,14 @@ async function run() {
 
     // bookings
 
-    // step-2: 
-    app.get("/booking", async (req, res) => {
+    // step-2: get all booking data from mongodb
+    app.get("/bookings", async (req, res) => {
         const cursor = bookingCollection.find();
         const result = await cursor.toArray();
         res.send(result);
-
     });
 
-    // step-1: inserting data from client side to mongodb
+    // step-1: inserting booking data from client side to mongodb
     app.post("/bookings", async (req, res) => {
         const booking = req.body;
         const result = await bookingCollection.insertOne(booking);
