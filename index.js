@@ -45,8 +45,9 @@ async function run() {
 
     // bookings
 
-    // step-2: get all booking data from mongodb
+    // step-2: get all booking data based on logged user from mongodb
     app.get("/bookings", async (req, res) => {
+        let query = {};
         if (req.query?.email) {
             query = { email: req.query.email };
         }
@@ -59,6 +60,14 @@ async function run() {
     app.post("/bookings", async (req, res) => {
         const booking = req.body;
         const result = await bookingCollection.insertOne(booking);
+        res.send(result);
+    });
+
+    // step-3: delete a booking
+    app.delete("/bookings/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await bookingCollection.deleteOne(query);
         res.send(result);
     });
 
