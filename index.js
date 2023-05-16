@@ -44,6 +44,16 @@ async function run() {
     });
 
     // bookings
+
+    // step-2: 
+    app.get("/booking", async (req, res) => {
+        const cursor = bookingCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+
+    });
+
+    // step-1: inserting data from client side to mongodb
     app.post("/bookings", async (req, res) => {
         const booking = req.body;
         const result = await bookingCollection.insertOne(booking);
