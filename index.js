@@ -26,6 +26,7 @@ async function run() {
     await client.connect();
 
     const serviceCollection = client.db("cardoctor").collection("services");
+    const bookingCollection = client.db("cardoctor").collection("bookings");
 
     // step-1: get all data from mongodb
     app.get("/services", async (req, res) => {
@@ -39,6 +40,13 @@ async function run() {
         const id = req.params.id;
         const query = {_id: new ObjectId(id)};
         const result = await serviceCollection.findOne(query);
+        res.send(result);
+    });
+
+    // bookings
+    app.post("/bookings", async (req, res) => {
+        const booking = req.body;
+        const result = await bookingCollection.insertOne(booking);
         res.send(result);
     });
 
