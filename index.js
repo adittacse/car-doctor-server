@@ -1,5 +1,6 @@
 const express = require('express');
 var cors = require('cors');
+const jwt = require("jsonwebtoken");
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
@@ -28,6 +29,16 @@ async function run() {
         const serviceCollection = client.db("cardoctor").collection("services");
         const bookingCollection = client.db("cardoctor").collection("bookings");
 
+        // jwt
+        app.post("/jwt", (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: "1h"});
+            res.send({token});
+        });
+
+        // services routes
+
         // step-1: get all services data from mongodb
         app.get("/services", async (req, res) => {
             const cursor = serviceCollection.find();
@@ -43,7 +54,7 @@ async function run() {
             res.send(result);
         });
 
-        // bookings
+        // bookings routes
 
         // step-2: get all booking data based on logged user from mongodb
         app.get("/bookings", async (req, res) => {
@@ -76,9 +87,7 @@ async function run() {
             };
             const result = await bookingCollection.updateOne(filter, updateDoc, options);
             res.send(result);
-
         });
-
 
         // step-3: delete a booking
         app.delete("/bookings/:id", async (req, res) => {
