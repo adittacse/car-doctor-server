@@ -73,6 +73,11 @@ async function run() {
 
         // step-2: get all booking data based on logged user from mongodb
         app.get("/bookings", verifyJWT, async (req, res) => {
+            const decoded = req.decoded;
+            if (decoded.email !== req.query.email) {
+                return res.status(403).send({ error: true, message: "Forbidden Access"});
+            }
+
             let query = {};
             if (req.query?.email) {
                 query = { email: req.query.email };
